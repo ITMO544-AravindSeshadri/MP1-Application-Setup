@@ -5,7 +5,7 @@
 </head>
 <body>
 <h2>Input Form</h2>
-<form enctype="multipart/form-data" action="result.php" method="POST">
+<form enctype="multipart/form-data" action="submit.php" method="POST">
 Enter Email: <input type="email" id="EmailId"><br>
 Enter Phone Number: <input type="text" name="Phone"><br>
 <input type="hidden" name="MAX_FILE_SIZE" value="3000000"><br>
