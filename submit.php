@@ -1,9 +1,5 @@
-
 <?php
-// Start the session
 session_start();
-// In PHP versions earlier than 4.1.0, $HTTP_POST_FILES should be used instead
-// of $_FILES.
 $uploaddir = '/tmp/';
 $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
 echo '<pre>';
@@ -12,50 +8,54 @@ if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
 } else {
     echo "Possible file upload attack!\n";
 }
+echo 'Here is some more debugging info:';
 print_r($_FILES);
 print "</pre>";
 require 'vendor/autoload.php';
 
 $s3 = new Aws\S3\S3Client([
     'version' => 'latest',
-    'region'  => 'us-west-2'
+    'region'  => 'us-east-1'
 ]);
-$bucket = uniqid("aravindbucket1",false);
+$bucket = uniqid("aravindbucket3",false);
 
-$result = $s3->createBucket(array(
+# AWS PHP SDK version 3 create bucket
+$result = $s3->createBucket([
     'ACL' => 'public-read',
     'Bucket' => $bucket
-));
+]);
 
-$result = $client->putObject(array(
+$result = $client->putObject([
     'ACL' => 'public-read',
     'Bucket' => $bucket,
    'Key' => $uploadfile
-));  
+]);  
+
 $url = $result['ObjectURL'];
 
 $rds = new Aws\Rds\RdsClient([
     'version' => 'latest',
-    'region'  => 'us-west-2'
+    'region'  => 'us-east-1'
 ]);
 $result = $rds->describeDBInstances([
     'DBInstanceIdentifier' => 'ITMO544AravindDb',
 ]);
-$endpoint = $result['DBInstances']['Endpoint']['Address'];
+$endpoint = $result['DBInstances']['Endpoint']['Address']
 
-$link = new mysqli($endpoint,"aravind","password","ITMO544AravindDb",3306);
+$link = mysqli_connect($endpoint,"aravind","password","ITMO544AravindDb") or die("Error " . mysqli_error($link));
 
-if (!($stmt = $link->prepare("INSERT INTO MP1 (uname,email,phoneforSMS,RawS3URL,FinishedS3URL,jpegfilename,state,DateTime) VALUES (NULL,?,?,?,?,?,?,?)"))) {
+if (!($stmt = $link->prepare("INSERT INTO MP1 (uname,email,phoneforSMS,RawS3URL,FinishedS3URL,jpegfilename,state,DateTime) VALUES (?,?,?,?,?,?,?,?)"))) {
     echo "Prepare failed: (" . $link->errno . ") " . $link->error;
 }
+$uname = "Aravind";
 $email = $_POST['useremail'];
-$phone = $_POST['phone'];
+$phoneforSMS = $_POST['phone'];
 $RawS3URL = $url; //  $result['ObjectURL']; from above
 $FinishedS3URL = "none";
 $jpegfilename = basename($_FILES['userfile']['name']);
-$state =0;
-$DateTime=time();
-$stmt->bind_param("sssssii",$email,$phone,$filename,$s3rawurl,$s3finishedurl,$status,$issubscribed);
+$state = 0;
+$DateTime = Time();
+$stmt->bind_param($uname,$email,$phoneforSMS,$RawS3URL,$FinishedS3URL,$jpegfilename,$state,$DateTime);
 if (!$stmt->execute()) {
     echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
 }
@@ -74,4 +74,3 @@ $link->close();
 // add code to generate SQS Message with a value of the ID returned from the most recent inserted piece of work
 //  Add code to update database to UPDATE status column to 1 (in progress)
 ?>
-
