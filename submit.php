@@ -32,7 +32,7 @@ $result = $client->putObject([
 ]);  
 
 $url = $result['ObjectURL'];
-
+echo $url;
 $rds = new Aws\Rds\RdsClient([
     'version' => 'latest',
     'region'  => 'us-east-1'
@@ -50,11 +50,11 @@ if (!($stmt = $link->prepare("INSERT INTO MP1 (uname,email,phoneforSMS,RawS3URL,
 $uname = "Aravind";
 $email = $_POST['useremail'];
 $phoneforSMS = $_POST['phone'];
-$RawS3URL = $url; //  $result['ObjectURL']; from above
+$RawS3URL = $url; //  $result['ObjectURL'];
 $FinishedS3URL = "none";
 $jpegfilename = basename($_FILES['userfile']['name']);
 $state = 0;
-$DateTime = Time();
+$DateTime = time();
 $stmt->bind_param($uname,$email,$phoneforSMS,$RawS3URL,$FinishedS3URL,$jpegfilename,$state,$DateTime);
 if (!$stmt->execute()) {
     echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
