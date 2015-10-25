@@ -15,7 +15,7 @@ require 'vendor/autoload.php';
 
 $s3 = new Aws\S3\S3Client([
     'version' => 'latest',
-    'region'  => 'us-east-1'
+    'region'  => 'us-west-2'
 ]);
 $bucket = uniqid("aravindbucket3",false);
 
@@ -35,7 +35,7 @@ $url = $result['ObjectURL'];
 echo $url;
 $rds = new Aws\Rds\RdsClient([
     'version' => 'latest',
-    'region'  => 'us-east-1'
+    'region'  => 'us-west-2'
 ]);
 $result = $rds->describeDBInstances([
     'DBInstanceIdentifier' => 'ITMO544AravindDb',
