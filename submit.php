@@ -17,19 +17,20 @@ $s3 = new Aws\S3\S3Client([
     'version' => 'latest',
     'region'  => 'us-west-2'
 ]);
-$bucket = uniqid("aravindbucketMP1",false);
-
+echo $client;
+#$bucket = uniqid("aravindbucketMP1",false);
+echo $bucket;
 # AWS PHP SDK version 3 create bucket
 $result = $s3->createBucket([
     'ACL' => 'public-read',
-    'Bucket' => $bucket
+    'Bucket' => 'aravindbucketMP1',
 ]); 
 echo $result;
 
 $result = $s3->putObject([
     'ACL' => 'public-read',
-    'Bucket' => $bucket,
-    'Key' => $uploadfile
+    'Bucket' => 'aravindbucketMP1',
+    'Key' => $uploadfile,
     ]);
 
 $url = $result['ObjectURL'];
