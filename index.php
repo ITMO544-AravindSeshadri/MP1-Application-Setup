@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head><title>My Page</title>
+<meta charset="utf-8">
 </head>
 <body>
 <h2>Input Form</h2>

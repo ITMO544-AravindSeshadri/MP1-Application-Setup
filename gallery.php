@@ -1,5 +1,6 @@
 <html>
 <head><title>Gallery</title>
+<meta charset="utf-8">
 </head>
 <body>
 
@@ -40,7 +41,7 @@ $link->real_query("SELECT * FROM MP1 WHERE email = '$email'");
 $res = $link->use_result();
 echo "Result set order...\n";
 while ($row = $res->fetch_assoc()) {
-    echo "<img src =\" " . $row['s3rawurl'] . "\" /><img src =\"" .$row['s3finishedurl'] . "\"/>";
+    echo "<img src =\" " . $row['RawS3URL'] . "\" /><img src =\"" .$row['FinishedS3URL'] . "\"/>";
 echo $row['id'] . "Email: " . $row['email'];
 }
 $link->close();
