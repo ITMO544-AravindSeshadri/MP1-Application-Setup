@@ -1,5 +1,6 @@
 <?php
 session_start();
+echo $_POST['useremail'];
 $uploaddir = '/tmp/';
 $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
 echo '<pre>';
@@ -12,36 +13,41 @@ echo 'Here is some more debugging info:';
 print_r($_FILES);
 print "</pre>";
 require 'vendor/autoload.php';
-
-$s3 = new Aws\S3\S3Client([
-    'version' => 'latest',
-    'region'  => 'us-west-2'
-]);
+use Aws\S3\S3Client;
+$client = S3Client::factory();
 $bucket = uniqid("aravindbucket3",false);
 
 # AWS PHP SDK version 3 create bucket
-$result = $s3->createBucket([
+$result = $s3->createBucket(array(
     'ACL' => 'public-read',
     'Bucket' => $bucket
-]);
+));
 
-$result = $client->putObject([
+$client->waitUntilBucketExists(array('Bucket' => $bucket));
+$result = $client->putObject(array(
     'ACL' => 'public-read',
     'Bucket' => $bucket,
-   'Key' => $uploadfile
-]);  
+   'Key' => $uploadfile,
+   'SourceFile' => $uploadfile
+));  
 
 $url = $result['ObjectURL'];
-echo $url;
-$rds = new Aws\Rds\RdsClient([
+echo $result;
+$rds = new Aws\Rds\RdsClient(array(
     'version' => 'latest',
     'region'  => 'us-west-2'
-]);
-$result = $rds->describeDBInstances([
+));
+$result = $rds->describeDBInstances(array(
     'DBInstanceIdentifier' => 'ITMO544AravindDb',
-]);
-$endpoint = $result['DBInstances']['Endpoint']['Address']
+));
+# $endpoint = $result['DBInstances']['Endpoint']['Address']
 
+$endpoint=" ";
+foreach ($result->getPath('DBInstances/*/Endpoint/Address') as $ep) {
+
+echo $ep;
+$endpoint=$ep;
+}
 $link = mysqli_connect($endpoint,"aravind","password","ITMO544AravindDb") or die("Error " . mysqli_error($link));
 
 if (!($stmt = $link->prepare("INSERT INTO MP1 (uname,email,phoneforSMS,RawS3URL,FinishedS3URL,jpegfilename,state,DateTime) VALUES (?,?,?,?,?,?,?,?)"))) {
