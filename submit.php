@@ -13,23 +13,24 @@ echo 'Here is some more debugging info:';
 print_r($_FILES);
 print "</pre>";
 require 'vendor/autoload.php';
-use Aws\S3\S3Client;
-$client = S3Client::factory();
-$bucket = uniqid("aravindbucket3",false);
+$s3 = new Aws\S3\S3Client([
+    'version' => 'latest',
+    'region'  => 'us-west-2'
+]);
+$bucket = uniqid("aravindbucketMP1",false);
 
 # AWS PHP SDK version 3 create bucket
-$result = $s3->createBucket(array(
+$result = $s3->createBucket([
     'ACL' => 'public-read',
     'Bucket' => $bucket
-));
+]); 
+echo $result;
 
-$client->waitUntilBucketExists(array('Bucket' => $bucket));
-$result = $client->putObject(array(
+$result = $s3->putObject([
     'ACL' => 'public-read',
     'Bucket' => $bucket,
-   'Key' => $uploadfile,
-   'SourceFile' => $uploadfile
-));  
+    'Key' => $uploadfile
+    ]);
 
 $url = $result['ObjectURL'];
 echo $result;
