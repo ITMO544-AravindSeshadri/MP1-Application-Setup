@@ -16,9 +16,9 @@ print "</pre>";
 require 'vendor/autoload.php';
 $s3 = new Aws\S3\S3Client([
     'version' => 'latest',
-        'region'  => 'us-west-2',
+        'region'  => 'us-west-2'
 ]);
-$bucket = uniqid("aravindbuck",false);
+$bucket = uniqid("aravindbuck3",false);
 
 # AWS PHP SDK version 3 create bucket
 $result = $s3->createBucket([
@@ -45,9 +45,6 @@ $result = $rds->describeDBInstances([
 echo $endpoint;
 $link = mysqli_connect($endpoint,"aravind","password","ITMO544AravindDb") or die("Error " . mysqli_error($link));
 
-if (!($stmt = $link->prepare("INSERT INTO MP1 (uname,email,phoneforSMS,RawS3URL,FinishedS3URL,jpegfilename,state,DateTime) VALUES (?,?,?,?,?,?,?,?)"))) {
-    echo "Prepare failed: (" . $link->errno . ") " . $link->error;
-}
 $uname = "Aravind";
 $email = $_POST['useremail'];
 $phoneforSMS = $_POST['phone'];
@@ -56,18 +53,18 @@ $FinishedS3URL = "none";
 $jpegfilename = basename($_FILES['userfile']['name']);
 $state = 0;
 $DateTime = date("Y-m-d H:i:s");
-$stmt->bind_param($uname,$email,$phoneforSMS,$RawS3URL,$FinishedS3URL,$jpegfilename,$state,$DateTime);
-if (!$stmt->execute()) {
-    echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+$sql="INSERT INTO MP1 (uname,email,phoneforSMS,RawS3URL,FinishedS3URL,jpegfilename,state,DateTime) VALUES ('$uname','$email','$phoneforSMS','$RawS3URL','$FinishedS3URL','$jpegfilename',$state,'$DateTime')";
+if (!mysqli_query($link,$sql))
+{
+die("Error: " . mysqli_error($link));
 }
-printf("%d Row inserted.\n", $stmt->affected_rows);
-/* explicit close recommended */
-$stmt->close();
+echo "Record successfully inserted!";
+
 $link->real_query("SELECT * FROM MP1");
 $res = $link->use_result();
 echo "Result set order...\n";
 while ($row = $res->fetch_assoc()) {
-    echo $row['id'] . " " . $row['email']. " " . $row['phoneforSMS'];
+    echo $row['ID'] . " " . $row['email']. " " . $row['phoneforSMS'];
 }
 $link->close();
 //add code to detect if subscribed to SNS topic 
