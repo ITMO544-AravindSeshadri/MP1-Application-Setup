@@ -34,21 +34,15 @@ $result = $s3->putObject([
     ]);
 $url=$result['ObjectURL'];
 print_r($url);
-$rds = new Aws\Rds\RdsClient(array(
+$rds = new Aws\Rds\RdsClient([
     'version' => 'latest',
     'region'  => 'us-west-2'
-));
-$result = $rds->describeDBInstances(array(
+]);
+$result = $rds->describeDBInstances([
     'DBInstanceIdentifier' => 'ITMO544AravindDb',
-));
-# $endpoint = $result['DBInstances']['Endpoint']['Address']
-
-$endpoint=" ";
-foreach ($result->getPath('DBInstances/*/Endpoint/Address') as $ep) {
-
-echo $ep;
-$endpoint=$ep;
-}
+]);
+ $endpoint = $result['DBInstances'][0]['Endpoint']['Address'];
+echo $endpoint;
 $link = mysqli_connect($endpoint,"aravind","password","ITMO544AravindDb") or die("Error " . mysqli_error($link));
 
 if (!($stmt = $link->prepare("INSERT INTO MP1 (uname,email,phoneforSMS,RawS3URL,FinishedS3URL,jpegfilename,state,DateTime) VALUES (?,?,?,?,?,?,?,?)"))) {
@@ -61,7 +55,7 @@ $RawS3URL = $url; //  $result['ObjectURL'];
 $FinishedS3URL = "none";
 $jpegfilename = basename($_FILES['userfile']['name']);
 $state = 0;
-$DateTime = time();
+$DateTime = date("Y-m-d H:i:s");
 $stmt->bind_param($uname,$email,$phoneforSMS,$RawS3URL,$FinishedS3URL,$jpegfilename,$state,$DateTime);
 if (!$stmt->execute()) {
     echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
