@@ -3,6 +3,7 @@ session_start();
 echo $_POST['useremail'];
 $uploaddir = '/tmp/';
 $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
+$filename=$_FILES['userfile']['name'];
 echo '<pre>';
 if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
     echo "File is valid, and was successfully uploaded.\n";
@@ -15,26 +16,24 @@ print "</pre>";
 require 'vendor/autoload.php';
 $s3 = new Aws\S3\S3Client([
     'version' => 'latest',
-    'region'  => 'us-west-2'
+        'region'  => 'us-west-2',
 ]);
-echo $client;
-#$bucket = uniqid("aravindbucketMP1",false);
-echo $bucket;
+$bucket = uniqid("aravindbuck",false);
+
 # AWS PHP SDK version 3 create bucket
 $result = $s3->createBucket([
     'ACL' => 'public-read',
-    'Bucket' => 'aravindbucketMP1',
+    'Bucket' => $bucket,
 ]); 
-echo $result;
 
 $result = $s3->putObject([
     'ACL' => 'public-read',
-    'Bucket' => 'aravindbucketMP1',
-    'Key' => $uploadfile,
+    'Bucket' => $bucket,
+    'Key' => $filename,
+    'SourceFile' => $uploadfile,
     ]);
-
-$url = $result['ObjectURL'];
-echo $result;
+$url=$result['ObjectURL'];
+print_r($url);
 $rds = new Aws\Rds\RdsClient(array(
     'version' => 'latest',
     'region'  => 'us-west-2'
@@ -82,3 +81,4 @@ $link->close();
 // add code to generate SQS Message with a value of the ID returned from the most recent inserted piece of work
 //  Add code to update database to UPDATE status column to 1 (in progress)
 ?>
+    
