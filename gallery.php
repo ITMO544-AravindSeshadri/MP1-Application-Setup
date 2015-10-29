@@ -11,21 +11,18 @@ echo $email;
 require 'vendor/autoload.php';
 
 use Aws\Rds\RdsClient;
-$client = RdsClient::factory(array(
-'region'  => 'us-west-2'
-));
+$client = RdsClient::factory([
+'region'  => 'us-west-2',
+    'version' => 'latest'
+]);
 
-$result = $client->describeDBInstances(array(
+$result = $client->describeDBInstances([
     'DBInstanceIdentifier' => 'ITMO544AravindDb',
-));
+]);
 
-$endpoint = "";
+ $endpoint = $result['DBInstances'][0]['Endpoint']['Address'];
+echo $endpoint;
 
-foreach ($result->getPath('DBInstances/*/Endpoint/Address') as $ep) {
-    // Do something with the message
-    echo "============". $ep . "================";
-    $endpoint = $ep;
-}   
 //echo "begin database";
 $link = mysqli_connect($endpoint,"aravind","password","ITMO544AravindDb") or die("Error " . mysqli_error($link));
 
@@ -42,7 +39,7 @@ $res = $link->use_result();
 echo "Result set order...\n";
 while ($row = $res->fetch_assoc()) {
     echo "<img src =\" " . $row['RawS3URL'] . "\" /><img src =\"" .$row['FinishedS3URL'] . "\"/>";
-echo $row['id'] . "Email: " . $row['email'];
+echo $row['ID'] . "Email: " . $row['email'];
 }
 $link->close();
 ?>
