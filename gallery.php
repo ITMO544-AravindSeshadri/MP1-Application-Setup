@@ -41,6 +41,16 @@ while ($row = $res->fetch_assoc()) {
     echo "<img src =\" " . $row['RawS3URL'] . "\" /><img src =\"" .$row['FinishedS3URL'] . "\"/>";
 echo $row['ID'] . "Email: " . $row['email'];
 }
+
+$link->real_query("SELECT * FROM MP1");
+$res = $link->use_result();
+echo "Result set order...\n";
+while ($row = $res->fetch_assoc()) {
+    echo "<img src =\" " . $row['RawS3URL'] . "\" /><img src =\"" .$row['FinishedS3URL'] . "\"/>";
+echo $row['ID'] . "Email: " . $row['email'];
+}
+
+
 $link->close();
 ?>
 </body>
