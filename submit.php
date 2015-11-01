@@ -67,9 +67,6 @@ while ($row = $res->fetch_assoc()) {
     echo $row['ID'] . " " . $row['email']. " " . $row['phoneforSMS'];
 }
 $link->close();
-//add code to detect if subscribed to SNS topic 
-//if not subscribed then subscribe the user and UPDATE the column in the database with a new value 0 to 1 so that then each time you don't have to resubscribe them
-// add code to generate SQS Message with a value of the ID returned from the most recent inserted piece of work
-//  Add code to update database to UPDATE status column to 1 (in progress)
+header("location: gallery.php");
 ?>
     
