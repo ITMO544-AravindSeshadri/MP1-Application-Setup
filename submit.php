@@ -84,6 +84,7 @@ $("first").click(function(){
 <?php
 header("location: gallery.php");
 ?>
+});
 </script>
 
 </body>
