@@ -48,7 +48,7 @@ $link->close();
 </div>
 <script>
 $(document).ready(function(){
-$(div).css("background-color" "blue");
+$("div").css("background-color":"blue");
 });
 </script>
 </body>
