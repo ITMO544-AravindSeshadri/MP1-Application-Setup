@@ -15,9 +15,9 @@ Load Image: <input type="file" name="userfile"><br>
 </form>
 <br>
 <br>
-<form enctype="multipart/form-data" action="gallery.php" method="POST">
+<!--<form enctype="multipart/form-data" action="gallery.php" method="POST">
 Enter email of the Gallery to find: <input type="email" name="email"><br>
-<input type="submit" value="View Gallery" />
-</form>
+<input type="submit" value="View Gallery" id="gal" />
+</form>-->
 </body>
 </html>
