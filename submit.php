@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head><title><Submit></title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
+<head><title>Submit</title>
 </head>
 <body>
-<input type="button" value="Click to view gallery" id="first">
 <?php
 session_start();
 echo $_POST['useremail'];
@@ -67,25 +64,13 @@ if (!mysqli_query($link,$sql))
 die("Error: " . mysqli_error($link));
 }
 echo "Record successfully inserted!";
-function DisplayAll()
-{
 $link->real_query("SELECT * FROM MP1");
 $res = $link->use_result();
 echo "Result set order...\n";
 while ($row = $res->fetch_assoc()) {
-    echo "<img src =\" " . $row['RawS3URL'] . "\" /><img src =\"" .$row['FinishedS3URL'] . "\"/>";
-echo $row['ID'] . "Email: " . $row['email'];
-}
+echo $row['ID'] . " " . $row['email']. " " . $row['phoneforSMS'];
 }
 $link->close();
 ?>
-<script> 
-$("first").click(function(){
-<?php
-header("location: gallery.php");
-?>
-});
-</script>
-
 </body>
 </html>
