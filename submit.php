@@ -63,6 +63,7 @@ if (!mysqli_query($link,$sql))
 {
 die("Error: " . mysqli_error($link));
 }
+header("location: gallery.php");
 echo "Record successfully inserted!";
 $link->real_query("SELECT * FROM MP1");
 $res = $link->use_result();
