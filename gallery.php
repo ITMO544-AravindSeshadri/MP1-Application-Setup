@@ -47,8 +47,8 @@ $link->close();
 ?>
 </div>
 <script>
-$("div").click(function(){
-$(this).hide();
+$(document).ready(function(){
+$(div).css("background-color" "blue");
 });
 </script>
 </body>
