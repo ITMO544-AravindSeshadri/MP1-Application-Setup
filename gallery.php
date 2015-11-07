@@ -2,9 +2,11 @@
 <head>
 <title>Gallery</title>
 <meta charset="utf-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
 </head>
 <body>
-
+<div id="images">
 <?php
 session_start();
 $email = $_POST["email"];
@@ -43,5 +45,11 @@ echo $row['ID'] . "Email: " . $row['email'];
 }
 $link->close();
 ?>
+</div>
+<script>
+$("div").click(function(){
+$(this).hide();
+});
+</script>
 </body>
 </html>
