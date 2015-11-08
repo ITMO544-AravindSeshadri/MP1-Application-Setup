@@ -48,6 +48,8 @@
   </style>
 </head>
 <body>
+<h4 style="text-align:center;"><i><b>Image Gallery</b></i></h4>
+<hr>
 <div class="container">
     <div id="slides"> 
 
@@ -68,7 +70,7 @@ $result = $client->describeDBInstances([
 ]);
 
  $endpoint = $result['DBInstances'][0]['Endpoint']['Address'];
-echo $endpoint;
+#echo $endpoint;
 
 //echo "begin database";
 $link = mysqli_connect($endpoint,"aravind","password","ITMO544AravindDb") or die("Error " . mysqli_error($link));
@@ -82,7 +84,7 @@ if (mysqli_connect_errno()) {
 //below line is unsafe - $email is not checked for SQL injection -- don't do this in real life or use an ORM instead
 $link->real_query("SELECT * FROM MP1");
 $res = $link->use_result();
-echo "Result set order...\n";
+#echo "Result set order...\n";
 while ($row = $res->fetch_assoc()) {
     echo "<img src =\" " . $row['RawS3URL'] . "\" />";
 # echo $row['ID'] . "Email: " . $row['email'];
